@@ -1,8 +1,13 @@
 ## Video Link 
-<video width="640" height="360" controls autoplay muted>
-  <source src="https://jam.dev/c/56a88e71-465f-493d-8c5b-b59920a25476" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<iframe 
+  src="https://jam.dev/c/56a88e71-465f-493d-8c5b-b59920a25476" 
+  width="100%" 
+  height="500" 
+  frameborder="0" 
+  allow="autoplay; fullscreen" 
+  allowfullscreen>
+</iframe>
+
 
 
 ---
