@@ -1,0 +1,341 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "CustomerOnboardingApi",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/Auth/send-resend-otp": {
+      "post": {
+        "tags": [
+          "OTP Send Or Resend"
+        ],
+        "summary": "Send OTP to customer's email and mobile by IC Number",
+        "description": "Generates and sends a 4-digit OTP to a customer's registered mobile and email if the customer exists and no valid OTP (within 2 minutes) has been previously sent. Prevents resending within 2 minutes for security.",
+        "operationId": "SendOtpByIC",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOtpByIcRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOtpByIcRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendOtpByIcRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP sent successfully",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/api/Customer/register": {
+      "post": {
+        "tags": [
+          "New Customer Registration"
+        ],
+        "summary": "Register a new customer",
+        "description": "Registers a new customer only if the provided IC Number is unique. If the IC Number already exists in the system, the API returns a warning message indicating that an account is already registered and prompts the user to log in instead. If the IC Number is not found, the customer is registered successfully, and a One-Time Password (OTP) is sent to both the provided mobile number and email address for verification. The IC Number must be exactly 12 digits in length. After successful registration, a 4-digit OTP is sent to the customer's mobile number and email address associated with the provided IC Number. The user can then proceed to verify the OTP and complete the login process.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerRegistrationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerRegistrationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Customer registered and OTP sent",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or duplicate ICNumber"
+          }
+        }
+      }
+    },
+    "/api/Customer/verify-otp": {
+      "post": {
+        "tags": [
+          "Verify OTP"
+        ],
+        "summary": "Verify OTP for a customer",
+        "description": "After a customer receives the 4-digit numeric OTP, they must verify it within 2 minutes, as the OTP will automatically expire after that time. If already verified, the system will return a message indicating that.",
+        "operationId": "VerifyOtp",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtpVerifyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP verified"
+          },
+          "400": {
+            "description": "Invalid or expired OTP"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/api/Customer/set-pin/{id}": {
+      "post": {
+        "tags": [
+          "Set PIN"
+        ],
+        "summary": "Set customer PIN",
+        "description": "This API endpoint allows a verified customer to set their personal 6-digit PIN. Before calling this endpoint, the customer must have completed the OTP verification process, confirming their identity. The PIN must be exactly 6 digits and numeric, providing a secure method for future authentication. If the customer is not verified, the request will be denied to ensure only authenticated users can set their PIN. Use user IDs such as 1 or 2 because these users already exist in the database.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPinRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPinRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetPinRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PIN set successfully"
+          },
+          "400": {
+            "description": "Customer not verified or PIN invalid"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    },
+    "/api/Customer/enable-fingerprint/{id}": {
+      "post": {
+        "tags": [
+          "Enable Fingerprint"
+        ],
+        "summary": "Enable fingerprint authentication for a verified customer",
+        "description": "This API endpoint enables fingerprint authentication for a customer who has already completed the OTP verification and set their PIN. The customer must be verified (`IsVerified = true`) before fingerprint can be enabled. Use user IDs such as 1 or 2 if those users already exist in the database.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fingerprint enabled successfully"
+          },
+          "400": {
+            "description": "Customer is not verified"
+          },
+          "404": {
+            "description": "Customer not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomerRegistrationRequest": {
+        "required": [
+          "email",
+          "icNumber",
+          "mobileNumber",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "default": "Mezba Uddin"
+          },
+          "icNumber": {
+            "pattern": "^\\d{11}$",
+            "type": "integer",
+            "format": "int64",
+            "default": 88021456631
+          },
+          "mobileNumber": {
+            "maxLength": 15,
+            "minLength": 0,
+            "pattern": "^\\+?\\d{10,15}$",
+            "type": "string",
+            "default": "+8801920519595"
+          },
+          "email": {
+            "maxLength": 100,
+            "minLength": 0,
+            "pattern": "^[A-Za-z0-9._%+-]{3,}@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+            "type": "string",
+            "format": "email",
+            "default": "csemezba@gmail.com"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OtpResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "otp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OtpVerifyRequest": {
+        "required": [
+          "otp"
+        ],
+        "type": "object",
+        "properties": {
+          "otp": {
+            "maximum": 9999,
+            "minimum": 1000,
+            "type": "integer",
+            "format": "int32",
+            "default": 7809
+          }
+        },
+        "additionalProperties": false
+      },
+      "SendOtpByIcRequest": {
+        "required": [
+          "icNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "icNumber": {
+            "maximum": 99999999999,
+            "minimum": 10000000000,
+            "type": "integer",
+            "format": "int64",
+            "default": 88021456631
+          }
+        },
+        "additionalProperties": false
+      },
+      "SetPinRequest": {
+        "required": [
+          "pin"
+        ],
+        "type": "object",
+        "properties": {
+          "pin": {
+            "maximum": 999999,
+            "minimum": 100000,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
