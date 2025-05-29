@@ -1,4 +1,4 @@
-## The full task video is available at the following link.
+## The full task video is available at the following link
 [Watch Video](https://jam.dev/c/56a88e71-465f-493d-8c5b-b59920a25476)
 
 
