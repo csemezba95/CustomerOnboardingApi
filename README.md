@@ -32,3 +32,17 @@ This project uses MySQL as the database backend and Entity Framework Core for OR
 ```bash
 git clone https://github.com/csemezba95/CustomerOnboardingApi.git
 cd CustomerOnboardingApi
+
+### 3. Configure Database
+appsettings.json
+"ConnectionStrings": {
+  "DefaultConnection": "server=localhost;user=root;password=;database=CustomerDb;"
+}
+
+Install Required Packages
+
+Install-Package Microsoft.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Pomelo.EntityFrameworkCore.MySql
+Install-Package Swashbuckle.AspNetCore
+
