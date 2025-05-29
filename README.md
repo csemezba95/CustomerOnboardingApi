@@ -1,12 +1,5 @@
-## Video Link 
-<iframe 
-  src="https://jam.dev/c/56a88e71-465f-493d-8c5b-b59920a25476" 
-  width="100%" 
-  height="500" 
-  frameborder="0" 
-  allow="autoplay; fullscreen" 
-  allowfullscreen>
-</iframe>
+## The full task video is available at the following link.
+[Watch Video](https://jam.dev/c/56a88e71-465f-493d-8c5b-b59920a25476)
 
 
 
