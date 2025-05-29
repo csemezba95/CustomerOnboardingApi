@@ -32,17 +32,77 @@ This project uses MySQL as the database backend and Entity Framework Core for OR
 ```bash
 git clone https://github.com/csemezba95/CustomerOnboardingApi.git
 cd CustomerOnboardingApi
+3. Configure Database
+Edit appsettings.json and update your connection string:
 
-### 3. Configure Database
-appsettings.json
+json
+Copy
+Edit
 "ConnectionStrings": {
   "DefaultConnection": "server=localhost;user=root;password=;database=CustomerDb;"
 }
+⚠️ Make sure your MySQL server is running and accessible.
 
-Install Required Packages
+4. Install Required NuGet Packages
+Use the Package Manager Console or run these commands:
 
+bash
+Copy
+Edit
 Install-Package Microsoft.EntityFrameworkCore
 Install-Package Microsoft.EntityFrameworkCore.Tools
 Install-Package Pomelo.EntityFrameworkCore.MySql
 Install-Package Swashbuckle.AspNetCore
+Or simply run:
+
+bash
+Copy
+Edit
+dotnet restore
+5. Apply Migrations and Create the Database
+bash
+Copy
+Edit
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+6. Run the Application
+bash
+Copy
+Edit
+dotnet run
+Navigate to:
+
+bash
+Copy
+Edit
+https://localhost:5001/swagger
+To access the Swagger UI and test your APIs.
+
+📘 API Endpoints Overview
+🔐 New Customer Registration Flow
+POST /api/customer/register – Register using IC Number
+
+POST /api/customer/verify-otp – Verify received OTP (valid for 2 minutes)
+
+POST /api/customer/set-pin/{id} – Set a secure 6-digit PIN
+
+POST /api/customer/enable-fingerprint/{id} – Enable fingerprint login (optional)
+
+🔑 Existing Customer Login Flow
+POST /api/customer/send-resend-otp – Send/resend OTP using IC number
+
+POST /api/customer/verify-otp – Verify OTP (must be used within 2 minutes)
+
+🧰 Tools & Frameworks
+.NET 8
+
+MySQL
+
+Entity Framework Core
+
+Pomelo.EntityFrameworkCore.MySql
+
+Swashbuckle (Swagger)
+
+Visual Studio 2022+
 
